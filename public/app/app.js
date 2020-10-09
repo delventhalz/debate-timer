@@ -1,4 +1,4 @@
-import m from './mithril.js';
+import m from '../lib/mithril.js';
 import { beep } from './beep.js';
 
 const appRoot = document.getElementById('app');
