@@ -1,5 +1,5 @@
 import m from '../lib/mithril.js';
-import { activate, beep } from './beep.js';
+import { activate, beep } from './beeper.js';
 
 const WARNING_TIME = 10000;
 const NO_REALLY_TIME = 5000;
