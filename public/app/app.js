@@ -5,15 +5,20 @@ const appRoot = document.getElementById('app');
 
 const WARNING_TIME = 10000;
 const NO_REALLY_TIME = 5000;
+
+const RAMP_UP_TIME = 12500;
+const EXTRA_ANNOYING_TIME = 15000;
+
 const ALARM_FREQUENCY = 1500;
-const RAMP_UP_TIME = 15000;
+const BEEP_INTERVAL = 250;
 
 const STATUSES = {
   NOT_RUNNING: 'not-running',
   GO: 'go',
   WARNING: 'warning',
   STOP: 'stop',
-  NO_REALLY: 'no-really'
+  NO_REALLY: 'no-really',
+  YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT: 'your-time-has-expired-mr-president'
 };
 
 const easeVal = (current, max) => {
@@ -55,15 +60,26 @@ const StartButton = {
     const { setStatus, addTimeout, duration } = vnode.attrs;
     let alarmStart;
 
+    const emitAnnoyingAlarm = () => {
+      beep();
+      addTimeout(emitAnnoyingAlarm, 250);
+    };
+
     const emitAlarm = () => {
       // Start at a low volume, but not quite zero, and ease up to full volume
-      const rampProgress = easeVal(Date.now() - alarmStart, RAMP_UP_TIME);
+      const elapsedTime = Date.now() - alarmStart;
+      const rampProgress = easeVal(elapsedTime, RAMP_UP_TIME);
       const volume = 0.02 + rampProgress * 0.98;
 
       addTimeout(() => beep({ volume }), 0);
-      addTimeout(() => beep({ volume }), 250);
+      addTimeout(() => beep({ volume }), BEEP_INTERVAL);
 
-      addTimeout(emitAlarm, ALARM_FREQUENCY);
+      if (elapsedTime < EXTRA_ANNOYING_TIME) {
+        addTimeout(emitAlarm, ALARM_FREQUENCY);
+      } else {
+        addTimeout(emitAnnoyingAlarm, BEEP_INTERVAL);
+        setStatus(STATUSES.YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT);
+      }
     };
 
     const onclick = () => {

@@ -73,3 +73,7 @@ body {
 #indicator.no-really {
   animation: flash 0.75s infinite alternate;
 }
+
+#indicator.your-time-has-expired-mr-president {
+  animation: flash 0.125s infinite alternate;
+}
