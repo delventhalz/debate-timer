@@ -71,5 +71,5 @@ body {
 }
 
 #indicator.no-really {
-  animation: flash 1s infinite alternate;
+  animation: flash 0.75s infinite alternate;
 }

@@ -1,9 +1,12 @@
 import m from './mithril.js';
+import { beep } from './beep.js';
 
 const appRoot = document.getElementById('app');
 
 const WARNING_TIME = 10000;
-const NO_REALLY_TIME = 10000;
+const NO_REALLY_TIME = 5000;
+const ALARM_FREQUENCY = 1500;
+const RAMP_UP_TIME = 15000;
 
 const STATUSES = {
   NOT_RUNNING: 'not-running',
@@ -11,6 +14,11 @@ const STATUSES = {
   WARNING: 'warning',
   STOP: 'stop',
   NO_REALLY: 'no-really'
+};
+
+const easeVal = (current, max) => {
+  const percent = Math.min(current / max, 1);
+  return percent ** 2;
 };
 
 const statusSetter = state => nextStatus => {
@@ -45,6 +53,18 @@ const StopButton = {
 const StartButton = {
   view(vnode) {
     const { setStatus, addTimeout, duration } = vnode.attrs;
+    let alarmStart;
+
+    const emitAlarm = () => {
+      // Start at a low volume, but not quite zero, and ease up to full volume
+      const rampProgress = easeVal(Date.now() - alarmStart, RAMP_UP_TIME);
+      const volume = 0.02 + rampProgress * 0.98;
+
+      addTimeout(() => beep({ volume }), 0);
+      addTimeout(() => beep({ volume }), 250);
+
+      addTimeout(emitAlarm, ALARM_FREQUENCY);
+    };
 
     const onclick = () => {
       setStatus(STATUSES.GO);
@@ -58,6 +78,8 @@ const StartButton = {
       }, duration);
 
       addTimeout(() => {
+        alarmStart = Date.now();
+        emitAlarm();
         setStatus(STATUSES.NO_REALLY);
       }, duration + NO_REALLY_TIME);
     }
