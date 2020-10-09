@@ -18,6 +18,14 @@ const STATUSES = {
   NO_REALLY: 'no-really',
   YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT: 'your-time-has-expired-mr-president'
 };
+const LABELS = {
+  [STATUSES.NOT_RUNNING]: '',
+  [STATUSES.GO]: '',
+  [STATUSES.WARNING]: '10 Seconds',
+  [STATUSES.STOP]: 'Please Stop',
+  [STATUSES.NO_REALLY]: 'Over Time',
+  [STATUSES.YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT]: 'Your Time Has Expired Mr. President'
+};
 
 const easeVal = (current, max) => {
   const percent = Math.min(current / max, 1);
@@ -107,12 +115,16 @@ export const Timer = {
   status: STATUSES.NOT_RUNNING,
   timeouts: [],
 
-  view({ state }) {
+  view({ attrs, state }) {
+    const { hideText } = attrs;
+    const { status } = state;
+
     const setStatus = statusSetter(state);
     const addTimeout = timeoutAdder(state);
     const clearTimeouts = timeoutsClearer(state);
 
-    const buttons = state.status === STATUSES.NOT_RUNNING
+    const label = hideText ? '' : LABELS[status];
+    const buttons = status === STATUSES.NOT_RUNNING
       ? [
         m(StartButton, { setStatus, addTimeout, duration: 120000 }, '2 min'),
         m(StartButton, { setStatus, addTimeout, duration: 60000 }, '1 min'),
@@ -121,7 +133,7 @@ export const Timer = {
       : m(StopButton, { setStatus, clearTimeouts });
 
     return m('.container', [
-      m('.indicator', { className: state.status }),
+      m('.indicator', { className: status }, label),
       m('.row', buttons)
     ]);
   }

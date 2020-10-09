@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
 .content {
@@ -24,7 +25,7 @@ body {
   width: calc(100% / 3 - 32px / 3);
   background-color: #E5E7EA;
   color: #202528;
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-family: inherit;
   font-size: 24px;
 }
 
@@ -35,10 +36,20 @@ body {
 }
 
 .indicator {
-  width: 100%;
-  height: calc(99vh - 224px);
+  width: calc(100% - 64px);
+  height: calc(99vh - 288px);
   border: 1px solid #DCE0E4;
   border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+  padding: 32px;
+  color: #FFFFFF;
+  font-size: 64px;
+  font-weight: 800;
 }
 
 .indicator.not-running {
