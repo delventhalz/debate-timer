@@ -2,7 +2,7 @@ body {
   margin: 0;
 }
 
-.container {
+.content {
   width: calc(100vw - 32px);
   padding: 16px 16px 0 16px;
 }
@@ -34,29 +34,29 @@ body {
   width: 100%;
 }
 
-#indicator {
+.indicator {
   width: 100%;
   height: calc(99vh - 224px);
   border: 1px solid #DCE0E4;
   border-radius: 16px;
 }
 
-#indicator.not-running {
+.indicator.not-running {
   background-color: #E5E7EA;
   transition: background-color 0.5s linear;
 }
 
-#indicator.go {
+.indicator.go {
   background-color: #00C648;
   transition: background-color 0.33s linear;
 }
 
-#indicator.warning {
+.indicator.warning {
   background-color: #FFAF39;
   transition: background-color 0.33s linear;
 }
 
-#indicator.stop {
+.indicator.stop {
   background-color: #FF3643;
   transition: background-color 0.33s linear;
 }
@@ -70,10 +70,10 @@ body {
   }
 }
 
-#indicator.no-really {
+.indicator.no-really {
   animation: flash 0.75s infinite alternate;
 }
 
-#indicator.your-time-has-expired-mr-president {
+.indicator.your-time-has-expired-mr-president {
   animation: flash 0.125s infinite alternate;
 }
