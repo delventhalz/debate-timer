@@ -52,7 +52,6 @@ const StopButton = {
     const { setStatus, clearTimeouts } = vnode.attrs;
 
     const onclick = () => {
-      activate();
       clearTimeouts();
       setStatus(STATUSES.NOT_RUNNING);
     };
