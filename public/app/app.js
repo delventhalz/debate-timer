@@ -1,5 +1,5 @@
 import m from '../lib/mithril.js';
-import { beep } from './beep.js';
+import { activate, beep } from './beep.js';
 
 const appRoot = document.getElementById('app');
 
@@ -47,6 +47,7 @@ const StopButton = {
     const { setStatus, clearTimeouts } = vnode.attrs;
 
     const onclick = () => {
+      activate();
       clearTimeouts();
       setStatus(STATUSES.NOT_RUNNING);
     }
@@ -83,6 +84,7 @@ const StartButton = {
     };
 
     const onclick = () => {
+      activate();
       setStatus(STATUSES.GO);
 
       addTimeout(() => {

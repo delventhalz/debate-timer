@@ -5,9 +5,9 @@ const DEFAULT_FREQUENCY = 520;
 const DEFAULT_VOLUME = 1;
 const DEFAULT_DURATION = 150;
 
-const ctx = new AudioContext();
+const noop = () => {};
 
-export const beep = ({
+const getBeeper = ctx => ({
   frequency = DEFAULT_FREQUENCY,
   volume = DEFAULT_VOLUME,
   duration = DEFAULT_DURATION
@@ -25,3 +25,30 @@ export const beep = ({
   oscillator.start(ctx.currentTime);
   oscillator.stop(ctx.currentTime + duration / 1000);
 };
+
+// Safari has an alternate AudioContext which must be activated
+// immediately on a user action, not in a user trigger setTimeout
+const getAudioInterface = () => {
+  if (window.AudioContext) {
+    return {
+      activate: noop,
+      beep: getBeeper(new window.AudioContext())
+    };
+  }
+
+  if (window.webkitAudioContext) {
+    const ctx = new window.webkitAudioContext();
+
+    return {
+      activate: ctx.resume.bind(ctx),
+      beep: getBeeper(ctx)
+    };
+  }
+
+  return {
+    activate: noop,
+    beep: noop
+  };
+}
+
+export const { activate, beep } = getAudioInterface();
