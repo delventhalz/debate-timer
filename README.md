@@ -12,5 +12,29 @@ https://debate-timer.netlify.app
 
 ### notext
 
-To disable the warning and overtime text, specify a query parameter of
-`?notext` in the URL.
+Use the `notext` query parameter to remove the helper text which appears during
+warnings and overtime.
+
+```
+https://debate-timer.netlify.app?notext
+```
+
+### timers
+
+Use the `timers` parameter to set the durations for up to three timers. Specify
+times in seconds, separated by commas.
+
+```
+https://debate-timer.netlify.app?timers=120,60,30
+https://debate-timer.netlify.app?timers=15,45
+```
+
+### timer
+
+Alternatively, one or more `timer` parameters can be used to specify timer
+durations.
+
+```
+https://debate-timer.netlify.app?timer=120&timer=60&timer=30
+https://debate-timer.netlify.app?timer=90
+```

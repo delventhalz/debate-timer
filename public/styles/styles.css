@@ -18,11 +18,22 @@ body {
   justify-content: space-between;
 }
 
+.col-3 {
+  width: calc(100% / 3 - 32px / 3);
+}
+
+.col-2 {
+  width: calc(100% / 2 - 16px / 2);
+}
+
+.col-1 {
+  width: 100%;
+}
+
 .button {
   border: 1px solid #DCE0E4;
   border-radius: 8px;
   padding: 16px;
-  width: calc(100% / 3 - 32px / 3);
   background-color: #E5E7EA;
   color: #202528;
   font-family: inherit;
@@ -32,7 +43,6 @@ body {
 .stop-button {
   color: #FF3643;
   font-weight: 800;
-  width: 100%;
 }
 
 .indicator {

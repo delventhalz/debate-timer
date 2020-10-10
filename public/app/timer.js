@@ -10,6 +10,8 @@ const EXTRA_ANNOYING_TIME = 15000;
 const ALARM_FREQUENCY = 1500;
 const BEEP_INTERVAL = 250;
 
+const DEFAULT_TIMERS = [120000, 60000, 30000];
+
 const STATUSES = {
   NOT_RUNNING: 'not-running',
   GO: 'go',
@@ -32,6 +34,22 @@ const easeVal = (current, max) => {
   return percent ** 2;
 };
 
+const toTimerLabel = duration => {
+  const secs = Math.round(duration / 1000);
+  const extraSecs = secs % 60;
+  const isNearlyAMinute = secs > 30 && (extraSecs > 57 || extraSecs < 3);
+
+  if (isNearlyAMinute) {
+    return `${Math.round(secs / 60)} min`;
+  }
+
+  if (secs < 120) {
+    return `${secs} sec`;
+  }
+
+  return `${Math.round(secs / 6) / 10} min`;
+};
+
 const statusSetter = state => nextStatus => {
   state.status = nextStatus;
   m.redraw();
@@ -49,20 +67,20 @@ const timeoutsClearer = state => () => {
 
 const StopButton = {
   view(vnode) {
-    const { setStatus, clearTimeouts } = vnode.attrs;
+    const { setStatus, clearTimeouts, ...attrs } = vnode.attrs;
 
     const onclick = () => {
       clearTimeouts();
       setStatus(STATUSES.NOT_RUNNING);
     };
 
-    return m('button.button.stop-button', { onclick }, 'Stop');
+    return m('button.button.stop-button.col-1', { onclick, ...attrs }, 'Stop');
   }
 };
 
 const StartButton = {
   view(vnode) {
-    const { setStatus, addTimeout, duration } = vnode.attrs;
+    const { setStatus, addTimeout, duration, ...attrs } = vnode.attrs;
     let alarmStart;
 
     const emitAnnoyingAlarm = () => {
@@ -106,7 +124,7 @@ const StartButton = {
       }, duration + NO_REALLY_TIME);
     };
 
-    return m('button.button', { onclick }, vnode.children);
+    return m('button.button', { onclick, ...attrs }, vnode.children);
   }
 };
 
@@ -115,7 +133,7 @@ export const Timer = {
   timeouts: [],
 
   view({ attrs, state }) {
-    const { hideText } = attrs;
+    const { hideText = false, timers = [] } = attrs;
     const { status } = state;
 
     const setStatus = statusSetter(state);
@@ -123,12 +141,19 @@ export const Timer = {
     const clearTimeouts = timeoutsClearer(state);
 
     const label = hideText ? '' : LABELS[status];
+    const durations = timers.length > 0
+      ? timers.slice(0, 3).sort((a, b) => b - a)
+      : DEFAULT_TIMERS;
+
     const buttons = status === STATUSES.NOT_RUNNING
-      ? [
-        m(StartButton, { setStatus, addTimeout, duration: 120000 }, '2 min'),
-        m(StartButton, { setStatus, addTimeout, duration: 60000 }, '1 min'),
-        m(StartButton, { setStatus, addTimeout, duration: 30000 }, '30 sec')
-      ]
+      ? durations.map(duration => (
+        m(StartButton, {
+          className: `col-${durations.length}`,
+          setStatus,
+          addTimeout,
+          duration
+        }, toTimerLabel(duration))
+      ))
       : m(StopButton, { setStatus, clearTimeouts });
 
     return m('.container', [
