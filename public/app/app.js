@@ -9,6 +9,7 @@ const App = {
   view() {
     const params = new URLSearchParams(window.location.search);
     const hideText = params.get('notext') !== null;
+    const isSilent = params.get('silent') != null;
 
     // Specify as comma separated "timers" or as multiple "timer" parameters
     const timers = (params.get('timers') || '')
@@ -21,7 +22,7 @@ const App = {
     const warning = warningString ? parseSeconds(warningString) : undefined;
 
     return m('.content', [
-      m(Timer, { hideText, timers, warning })
+      m(Timer, { hideText, isSilent, timers, warning })
     ]);
   }
 };

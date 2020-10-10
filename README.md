@@ -48,3 +48,12 @@ zero or a negative number to disable the warning completely.
 https://debate-timer.netlify.app?warning=20
 https://debate-timer.netlify.app?warning=-1
 ```
+
+### silent
+
+Finally, if you want to disable the audio tone that ramps up as debaters
+go further and further into overtime, use the `silent` parameter.
+
+```
+https://debate-timer.netlify.app?silent
+```

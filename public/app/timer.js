@@ -90,6 +90,7 @@ const StartButton = {
     const {
       setStatus,
       addTimeout,
+      isSilent,
       duration,
       warning,
       ...attrs
@@ -119,8 +120,10 @@ const StartButton = {
     };
 
     const onclick = () => {
-      activate();
       setStatus(STATUSES.GO);
+      if (!isSilent) {
+        activate();
+      }
 
       if (warning) {
         addTimeout(() => {
@@ -133,9 +136,11 @@ const StartButton = {
       }, duration);
 
       addTimeout(() => {
-        alarmStart = Date.now();
-        emitAlarm();
         setStatus(STATUSES.NO_REALLY);
+        if (!isSilent) {
+          alarmStart = Date.now();
+          emitAlarm();
+        }
       }, duration + NO_REALLY_TIME);
     };
 
@@ -150,6 +155,7 @@ export const Timer = {
   view({ attrs, state }) {
     const {
       hideText = false,
+      isSilent = false,
       timers = [],
       warning = DEFAULT_WARNING_TIME
     } = attrs;
@@ -170,6 +176,7 @@ export const Timer = {
           className: `col-${durations.length}`,
           setStatus,
           addTimeout,
+          isSilent,
           duration,
           warning
         }, toTimerLabel(duration))
