@@ -1,7 +1,7 @@
 import m from '../lib/mithril.js';
 import { activate, beep } from './beeper.js';
 
-const WARNING_TIME = 10000;
+const DEFAULT_WARNING_TIME = 10000;
 const NO_REALLY_TIME = 5000;
 
 const RAMP_UP_TIME = 12500;
@@ -20,18 +20,25 @@ const STATUSES = {
   NO_REALLY: 'no-really',
   YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT: 'your-time-has-expired-mr-president'
 };
-const LABELS = {
-  [STATUSES.NOT_RUNNING]: '',
-  [STATUSES.GO]: '',
-  [STATUSES.WARNING]: '10 Seconds',
-  [STATUSES.STOP]: 'Please Stop',
-  [STATUSES.NO_REALLY]: 'Over Time',
-  [STATUSES.YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT]: 'Your Time Has Expired Mr. President'
-};
 
 const easeVal = (current, max) => {
   const percent = Math.min(current / max, 1);
   return percent ** 2;
+};
+
+const toIndicatorLabel = (status, input) => {
+  switch (status) {
+    case STATUSES.WARNING:
+      return `${Math.round(input / 1000)} Seconds`;
+    case STATUSES.STOP:
+      return 'Please Stop';
+    case STATUSES.NO_REALLY:
+      return 'Over Time';
+    case STATUSES.YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT:
+      return 'Your Time Has Expired Mr. President';
+    default:
+      return '';
+  }
 };
 
 const toTimerLabel = duration => {
@@ -80,7 +87,13 @@ const StopButton = {
 
 const StartButton = {
   view(vnode) {
-    const { setStatus, addTimeout, duration, ...attrs } = vnode.attrs;
+    const {
+      setStatus,
+      addTimeout,
+      duration,
+      warning,
+      ...attrs
+    } = vnode.attrs;
     let alarmStart;
 
     const emitAnnoyingAlarm = () => {
@@ -109,9 +122,11 @@ const StartButton = {
       activate();
       setStatus(STATUSES.GO);
 
-      addTimeout(() => {
-        setStatus(STATUSES.WARNING);
-      }, duration - WARNING_TIME);
+      if (warning) {
+        addTimeout(() => {
+          setStatus(STATUSES.WARNING);
+        }, duration - warning);
+      }
 
       addTimeout(() => {
         setStatus(STATUSES.STOP);
@@ -133,14 +148,18 @@ export const Timer = {
   timeouts: [],
 
   view({ attrs, state }) {
-    const { hideText = false, timers = [] } = attrs;
+    const {
+      hideText = false,
+      timers = [],
+      warning = DEFAULT_WARNING_TIME
+    } = attrs;
     const { status } = state;
 
     const setStatus = statusSetter(state);
     const addTimeout = timeoutAdder(state);
     const clearTimeouts = timeoutsClearer(state);
 
-    const label = hideText ? '' : LABELS[status];
+    const label = hideText ? '' : toIndicatorLabel(status, warning);
     const durations = timers.length > 0
       ? timers.slice(0, 3).sort((a, b) => b - a)
       : DEFAULT_TIMERS;
@@ -151,7 +170,8 @@ export const Timer = {
           className: `col-${durations.length}`,
           setStatus,
           addTimeout,
-          duration
+          duration,
+          warning
         }, toTimerLabel(duration))
       ))
       : m(StopButton, { setStatus, clearTimeouts });

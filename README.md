@@ -5,10 +5,10 @@ https://debate-timer.netlify.app
 ## Usage
 
 - Press a button to start timing 2 minutes, 1 minute, or 30 seconds
-- Get a yellow 10 second warning at 10 seconds
+- Get a yellow warning at 10 seconds
 - Starts to beep at five seconds of over time
 
-## Settings
+## Customization
 
 ### notext
 
@@ -37,4 +37,14 @@ durations.
 ```
 https://debate-timer.netlify.app?timer=120&timer=60&timer=30
 https://debate-timer.netlify.app?timer=90
+```
+
+### warning
+
+You can also specify the amount of time left before the warning appears. Use
+zero or a negative number to disable the warning completely.
+
+```
+https://debate-timer.netlify.app?warning=20
+https://debate-timer.netlify.app?warning=-1
 ```

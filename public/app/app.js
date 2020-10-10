@@ -3,6 +3,8 @@ import { Timer } from './timer.js';
 
 const appRoot = document.getElementById('app');
 
+const parseSeconds = seconds => Math.max(Number(seconds) * 1000, 0);
+
 const App = {
   view() {
     const params = new URLSearchParams(window.location.search);
@@ -12,12 +14,14 @@ const App = {
     const timers = (params.get('timers') || '')
       .split(',')
       .concat(params.getAll('timer'))
-      .map(Number)
-      .filter(Boolean)
-      .map(num => num * 1000);
+      .map(parseSeconds)
+      .filter(Boolean);
+
+    const warningString = params.get('warning');
+    const warning = warningString ? parseSeconds(warningString) : undefined;
 
     return m('.content', [
-      m(Timer, { hideText, timers })
+      m(Timer, { hideText, timers, warning })
     ]);
   }
 };
