@@ -26,7 +26,7 @@ body {
   background-color: #E5E7EA;
   color: #202528;
   font-family: inherit;
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .stop-button {
@@ -37,7 +37,7 @@ body {
 
 .indicator {
   width: calc(100% - 64px);
-  height: calc(99vh - 288px);
+  height: calc(99vh - 286px);
   border: 1px solid #DCE0E4;
   border-radius: 16px;
   display: flex;
@@ -48,7 +48,7 @@ body {
   letter-spacing: 0.075em;
   padding: 32px;
   color: #FFFFFF;
-  font-size: 64px;
+  font-size: 48px;
   font-weight: 800;
 }
 
