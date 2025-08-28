@@ -18,7 +18,7 @@ const STATUSES = {
   WARNING: 'warning',
   STOP: 'stop',
   NO_REALLY: 'no-really',
-  YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT: 'your-time-has-expired-mr-president'
+  REALLY_REALLY: 'really-really'
 };
 
 const easeVal = (current, max) => {
@@ -34,8 +34,8 @@ const toIndicatorLabel = (status, input) => {
       return 'Please Stop';
     case STATUSES.NO_REALLY:
       return 'Over Time';
-    case STATUSES.YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT:
-      return 'Your Time Has Expired Mr. President';
+    case STATUSES.REALLY_REALLY:
+      return 'Your Time Has Expired Sir';
     default:
       return '';
   }
@@ -115,7 +115,7 @@ const StartButton = {
         addTimeout(emitAlarm, ALARM_FREQUENCY);
       } else {
         addTimeout(emitAnnoyingAlarm, BEEP_INTERVAL);
-        setStatus(STATUSES.YOUR_TIME_HAS_EXPIRED_MR_PRESIDENT);
+        setStatus(STATUSES.REALLY_REALLY);
       }
     };
 
